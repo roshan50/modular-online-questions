@@ -1,39 +1,44 @@
 import questions from './questions.js';
-// import Buttons from './Buttons';
-
+import Buttons from './Buttons';
 const Question = (function(){
-  let panel;
-  let title;
+  let titleElem;
+
   function init(){
-    // cacheDom();
+    cacheDom();
+    var page = localStorage.getItem("page");
+    Buttons.init(page);
+    if(!page)
+       page=1;
+    loadQuestion(page);
   }
 
   function cacheDom(){
-    panel = document.querySelector(".panel");
-    title = document.querySelector(".panel-title");
+    titleElem = document.querySelectorAll(".panel-title");
   }
 
   function loadQuestion(page){
-    cacheDom();
-    var i;
+    var k = 0;
     var start = (page-1)*4+1;
     var end = page*4;
     for (var key in questions) {
       key = parseInt(key);
       if(key>=start && key<=end){
-        alert(questions[key].title);
-        alert(title[0].innerHTML);
-        for(i=1; i<5; i++){
-          // alert(questions[key].answers[i]);
+        titleElem[k].innerHTML = questions[key].title;
+
+        for(var i=0; i<4; i++){
+          var optionElem = titleElem[k].parentNode.parentNode.querySelector('.panel-body').querySelectorAll('.option')[i];
+          // var optionElem = titleElem[k].closest('.panel-body').querySelectorAll('.option')[i];
+          optionElem.innerHTML = questions[key].answers[i];
         }
+
+        k++;
       }
     }
 
   }
 
   return {
-    init,
-    loadQuestion
+    init
   };
 })();
 
